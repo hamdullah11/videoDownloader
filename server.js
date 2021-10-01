@@ -5,6 +5,8 @@ import cors from "cors";
 
 // Schemas
 import user from "./schemas/user.js";
+import level from "./schemas/level.js";
+import wbs from "./schemas/wbs.js";
 
 // App Config
 const app = express();
@@ -35,6 +37,19 @@ app.get("/get/users", (req, res) => {
     res.send(values);
   });
 });
+
+app.get("/get/levels", (req, res) => {
+  level.find((err, values) => {
+    res.send(values);
+  });
+});
+
+app.get("/get/wbs", (req, res) => {
+  wbs.find((err, values) => {
+    res.send(values);
+  });
+});
+
 app.post("/auth", (req, res) => {
   const Data = req.body;
   // res.send(Data);
@@ -47,9 +62,28 @@ app.post("/auth", (req, res) => {
     else res.send(values);
   });
 });
+
 app.post("/user/create", (req, res) => {
   const Data = req.body;
   user.create(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
+app.post("/level/create", (req, res) => {
+  const Data = req.body;
+  // res.send(Body);
+  // return;
+  level.create(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
+app.post("/wbs/create", (req, res) => {
+  const Data = req.body;
+  // res.send(Body);
+  // return;
+  wbs.create(Data, (err, values) => {
     if (!err) res.send("ok");
   });
 });
