@@ -17,7 +17,7 @@ app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
 const port = process.env.port || 3000;
 const connection_url =
-  "mongodb+srv://TSMT:" +
+  "mongodb+srv://adil:" +
   Credentials.password +
   "@cluster0.4cdpy.mongodb.net/" +
   Credentials.database +
@@ -26,7 +26,11 @@ const connection_url =
 // Middlewares
 
 // DB Config
-mongoose.connect(connection_url);
+mongoose.connect(connection_url, {
+  useUnifiedTopology: true,
+  useNewUrlParser: true,
+  // useCreateIndex: true,
+});
 
 // API Endpoints
 app.get("/", (req, res) => {
@@ -66,6 +70,13 @@ app.post("/auth", (req, res) => {
 app.post("/user/create", (req, res) => {
   const Data = req.body;
   user.create(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
+app.post("/user/delete", (req, res) => {
+  const Data = req.body;
+  user.deleteOne(Data, (err, values) => {
     if (!err) res.send("ok");
   });
 });
