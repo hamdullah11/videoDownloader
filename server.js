@@ -7,6 +7,7 @@ import cors from "cors";
 import user from "./schemas/user.js";
 import level from "./schemas/level.js";
 import wbs from "./schemas/wbs.js";
+import workflow from "./schemas/workflow.js";
 
 // App Config
 const app = express();
@@ -36,8 +37,27 @@ mongoose.connect(connection_url, {
 app.get("/", (req, res) => {
   res.send("Happy Time Sheet Managing!");
 });
+
 app.get("/get/users", (req, res) => {
   user.find((err, values) => {
+    res.send(values);
+  });
+});
+
+app.get("/get/users/admin", (req, res) => {
+  user.find({ Role: "admin" }, (err, values) => {
+    res.send(values);
+  });
+});
+
+app.get("/get/users/viewer", (req, res) => {
+  user.find({ Role: "viewer" }, (err, values) => {
+    res.send(values);
+  });
+});
+
+app.get("/get/users/employee", (req, res) => {
+  user.find({ Role: "employee" }, (err, values) => {
     res.send(values);
   });
 });
@@ -48,8 +68,20 @@ app.get("/get/levels", (req, res) => {
   });
 });
 
+app.get("/get/projects", (req, res) => {
+  wbs.find((err, values) => {
+    res.send(values);
+  });
+});
+
 app.get("/get/wbs", (req, res) => {
   wbs.find((err, values) => {
+    res.send(values);
+  });
+});
+
+app.get("/get/workflow", (req, res) => {
+  workflow.find((err, values) => {
     res.send(values);
   });
 });
@@ -67,6 +99,13 @@ app.post("/auth", (req, res) => {
   });
 });
 
+app.post("/workflow/create", (req, res) => {
+  const Data = req.body;
+  workflow.create(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
 app.post("/user/create", (req, res) => {
   const Data = req.body;
   user.create(Data, (err, values) => {
@@ -81,6 +120,13 @@ app.post("/user/delete", (req, res) => {
   });
 });
 
+app.post("/user/edit", (req, res) => {
+  const Data = req.body;
+  user.updateOne({ _id: Data._id }, Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
 app.post("/level/create", (req, res) => {
   const Data = req.body;
   // res.send(Body);
@@ -90,11 +136,25 @@ app.post("/level/create", (req, res) => {
   });
 });
 
+app.post("/level/delete", (req, res) => {
+  const Data = req.body;
+  level.deleteOne(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
 app.post("/wbs/create", (req, res) => {
   const Data = req.body;
   // res.send(Body);
   // return;
   wbs.create(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
+app.post("/wbs/delete", (req, res) => {
+  const Data = req.body;
+  wbs.deleteOne(Data, (err, values) => {
     if (!err) res.send("ok");
   });
 });

@@ -6,6 +6,7 @@ const user_schema = mongoose.Schema({
   Contact: String,
   Password: String,
   Role: String,
+  Level: String,
 });
 
 export default mongoose.model("user", user_schema);
