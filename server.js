@@ -8,6 +8,7 @@ import user from "./schemas/user.js";
 import level from "./schemas/level.js";
 import wbs from "./schemas/wbs.js";
 import workflow from "./schemas/workflow.js";
+import progress from "./schemas/progress.js";
 
 // App Config
 const app = express();
@@ -74,14 +75,34 @@ app.get("/get/projects", (req, res) => {
   });
 });
 
+app.post("/get/projects", (req, res) => {
+  const Data = req.body;
+  wbs.find(Data, (err, values) => {
+    res.send(values);
+  });
+});
+
 app.get("/get/wbs", (req, res) => {
   wbs.find((err, values) => {
     res.send(values);
   });
 });
 
+app.get("/get/progress", (req, res) => {
+  progress.find((err, values) => {
+    res.send(values);
+  });
+});
+
 app.get("/get/workflow", (req, res) => {
   workflow.find((err, values) => {
+    res.send(values);
+  });
+});
+
+app.post("/get/workflow", (req, res) => {
+  const Data = req.body;
+  workflow.find(Data, (err, values) => {
     res.send(values);
   });
 });
@@ -102,6 +123,48 @@ app.post("/auth", (req, res) => {
 app.post("/workflow/create", (req, res) => {
   const Data = req.body;
   workflow.create(Data, (err, values) => {
+    if (!err) res.send(values._id);
+  });
+});
+
+app.post("/workflow/delete", (req, res) => {
+  const Data = req.body;
+  workflow.deleteOne(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
+app.post("/progress/create", (req, res) => {
+  const Data = req.body;
+  progress.create(
+    {
+      Workflow_id: Data.Workflow_id,
+      Progress: Data.Progress,
+    },
+    (err, values) => {
+      if (!err) res.send("ok");
+    }
+  );
+});
+
+app.post("/progress/update", (req, res) => {
+  const Data = req.body;
+  progress.updateOne(
+    {
+      Workflow_id: Data.Workflow_id,
+    },
+    {
+      ...Data.Progress,
+    },
+    (err, values) => {
+      if (!err) res.send("ok");
+    }
+  );
+});
+
+app.post("/progress/delete", (req, res) => {
+  const Data = req.body;
+  progress.deleteOne(Data, (err, values) => {
     if (!err) res.send("ok");
   });
 });
