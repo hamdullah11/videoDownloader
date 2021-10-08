@@ -7,6 +7,7 @@ import cors from "cors";
 import user from "./schemas/user.js";
 import level from "./schemas/level.js";
 import wbs from "./schemas/wbs.js";
+import task from "./schemas/task.js";
 import workflow from "./schemas/workflow.js";
 import progress from "./schemas/progress.js";
 
@@ -84,6 +85,12 @@ app.post("/get/projects", (req, res) => {
 
 app.get("/get/wbs", (req, res) => {
   wbs.find((err, values) => {
+    res.send(values);
+  });
+});
+
+app.get("/get/tasks", (req, res) => {
+  task.find((err, values) => {
     res.send(values);
   });
 });
@@ -218,6 +225,20 @@ app.post("/wbs/create", (req, res) => {
 app.post("/wbs/delete", (req, res) => {
   const Data = req.body;
   wbs.deleteOne(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
+app.post("/task/create", (req, res) => {
+  const Data = req.body;
+  task.create(Data, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
+app.post("/task/delete", (req, res) => {
+  const Data = req.body;
+  task.deleteOne(Data, (err, values) => {
     if (!err) res.send("ok");
   });
 });
