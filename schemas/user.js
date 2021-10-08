@@ -7,6 +7,7 @@ const user_schema = mongoose.Schema({
   Password: String,
   Role: String,
   Level: String,
+  Site: { type: String, default: "onsite" },
 });
 
 export default mongoose.model("user", user_schema);
