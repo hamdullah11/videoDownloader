@@ -190,6 +190,17 @@ app.post("/user/delete", (req, res) => {
   });
 });
 
+app.post("/user/password", (req, res) => {
+  const Data = req.body;
+  user.updateOne(
+    { _id: Data._id },
+    { Password: Data.NewPassword },
+    (err, values) => {
+      if (!err) res.send("ok");
+    }
+  );
+});
+
 app.post("/user/edit", (req, res) => {
   const Data = req.body;
   user.updateOne({ _id: Data._id }, Data, (err, values) => {
