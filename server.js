@@ -217,6 +217,13 @@ app.post("/level/create", (req, res) => {
   });
 });
 
+app.post("/level/update", (req, res) => {
+  const Data = req.body;
+  level.updateOne({ _id: Data.id }, Data.body, (err, values) => {
+    if (!err) res.send("ok");
+  });
+});
+
 app.post("/level/delete", (req, res) => {
   const Data = req.body;
   level.deleteOne(Data, (err, values) => {
