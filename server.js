@@ -264,22 +264,23 @@ app.post("/task/delete", (req, res) => {
   });
 });
 
-app.get("/download/excel", (req, res) => {
-  const jsonArr = [
-    {
-      foo: "bar",
-      qux: "moo",
-      poo: 123,
-      stux: new Date(),
-    },
-    {
-      foo: "bar",
-      qux: "moo",
-      poo: 345,
-      stux: new Date(),
-    },
-  ];
-  res.xls("data.xlsx", jsonArr);
+app.post("/download/excel", (req, res) => {
+  // const jsonArr = [
+  //   {
+  //     foo: "bar",
+  //     qux: "moo",
+  //     poo: 123,
+  //     stux: new Date(),
+  //   },
+  //   {
+  //     foo: "bar",
+  //     qux: "moo",
+  //     poo: 345,
+  //     stux: new Date(),
+  //   },
+  // ];
+  const Data = req.body;
+  res.xls("Master Data.xlsx", Data);
 });
 
 app.listen(process.env.PORT || 3000, function () {
