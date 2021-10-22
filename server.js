@@ -264,7 +264,7 @@ app.post("/task/delete", (req, res) => {
   });
 });
 
-app.post("/download/excel", (req, res) => {
+app.get("/download/excel/:json", (req, res) => {
   // const jsonArr = [
   //   {
   //     foo: "bar",
@@ -279,8 +279,9 @@ app.post("/download/excel", (req, res) => {
   //     stux: new Date(),
   //   },
   // ];
-  const fieldsArr = req.body.fields;
-  const Data = req.body.data;
+  const _ = JSON.parse(json);
+  const fieldsArr = _.fields;
+  const Data = _.data;
   res.xls("Master Data.xlsx", Data, {
     fields: ["ProjectName", ...fieldsArr, Total],
   });
