@@ -279,8 +279,11 @@ app.post("/download/excel", (req, res) => {
   //     stux: new Date(),
   //   },
   // ];
-  const Data = req.body;
-  res.xls("Master Data.xlsx", Data);
+  const fieldsArr = req.body.fields;
+  const Data = req.body.data;
+  res.xls("Master Data.xlsx", Data, {
+    fields: ["ProjectName", ...fieldsArr, Total],
+  });
 });
 
 app.listen(process.env.PORT || 3000, function () {
