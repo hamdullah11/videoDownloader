@@ -279,9 +279,9 @@ app.get("/download/excel/:json", (req, res) => {
   //     stux: new Date(),
   //   },
   // ];
-  const _ = JSON.parse(json);
-  const fieldsArr = _.fields;
-  const Data = _.data;
+  const __ = JSON.parse(json);
+  const fieldsArr = __.fields;
+  const Data = __.data;
   res.xls("Master Data.xlsx", Data, {
     fields: ["ProjectName", ...fieldsArr, Total],
   });
