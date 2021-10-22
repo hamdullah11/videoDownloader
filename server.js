@@ -2,6 +2,7 @@ import express from "express";
 import mongoose from "mongoose";
 import Credentials from "./credentials.js";
 import cors from "cors";
+import json2xls from "json2xls";
 
 // Schemas
 import user from "./schemas/user.js";
@@ -13,11 +14,13 @@ import progress from "./schemas/progress.js";
 
 // App Config
 const app = express();
+// var json2xls = require('json2xls');
 
 // app.use(express.json());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
+app.use(json2xls.middleware);
 const port = process.env.port || 3000;
 const connection_url =
   "mongodb+srv://adil:" +
@@ -259,6 +262,24 @@ app.post("/task/delete", (req, res) => {
   task.deleteOne(Data, (err, values) => {
     if (!err) res.send("ok");
   });
+});
+
+app.get("/download/excel", (req, res) => {
+  const jsonArr = [
+    {
+      foo: "bar",
+      qux: "moo",
+      poo: 123,
+      stux: new Date(),
+    },
+    {
+      foo: "bar",
+      qux: "moo",
+      poo: 345,
+      stux: new Date(),
+    },
+  ];
+  res.xls("data.xlsx", jsonArr);
 });
 
 app.listen(process.env.PORT || 3000, function () {
