@@ -137,6 +137,21 @@ app.post("/workflow/create", (req, res) => {
   });
 });
 
+app.post("/workflow/update", (req, res) => {
+  const Data = req.body;
+  workflow.updateOne(
+    {
+      _id: Data.id,
+    },
+    {
+      Date_B: Data.deadline,
+    },
+    (err, values) => {
+      if (!err) res.send("ok");
+    }
+  );
+});
+
 app.post("/workflow/delete", (req, res) => {
   const Data = req.body;
   workflow.deleteOne(Data, (err, values) => {
