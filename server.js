@@ -222,7 +222,7 @@ app.post("/user/password", (req, res) => {
 app.post("/user/edit", (req, res) => {
   const Data = req.body;
   user.updateOne({ _id: Data._id }, Data, (err, values) => {
-    if (!err) res.send("ok");
+    if (!err) res.send(values);
   });
 });
 
