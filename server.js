@@ -1,26 +1,37 @@
 import express from "express";
-import mongoose from "mongoose";
-import Credentials from "./credentials.js";
+// import mongoose from "mongoose";
+// import Credentials from "./credentials.js";
 import cors from "cors";
-import json2xls from "json2xls";
+// import json2xls from "json2xls";
+import ytdl from "ytdl-core";
 
 // Schemas
-import user from "./schemas/user.js";
-import level from "./schemas/level.js";
-import wbs from "./schemas/wbs.js";
-import task from "./schemas/task.js";
-import workflow from "./schemas/workflow.js";
-import progress from "./schemas/progress.js";
+// import user from "./schemas/user.js";
+// import level from "./schemas/level.js";
+// import wbs from "./schemas/wbs.js";
+// import task from "./schemas/task.js";
+// import workflow from "./schemas/workflow.js";
+// import progress from "./schemas/progress.js";
+import request from "request";
+import axios from "axios";
 
 // App Config
 const app = express();
 // var json2xls = require('json2xls');
 
 // app.use(express.json());
-app.use(express.json({ limit: "50mb" }));
-app.use(express.urlencoded({ limit: "50mb", extended: true }));
+// app.use(express.json({ limit: "50mb" }));
+// app.use(express.urlencoded({ limit: "50mb", extended: true }));
 app.use(cors());
-app.use(json2xls.middleware);
+app.use(function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "https://y2mate.is"); // update to match the domain you will make the request from
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
+// app.use(json2xls.middleware);
 const port = process.env.port || 3000;
 // const connection_url =
 //   "mongodb+srv://pakistan:" +
@@ -28,261 +39,63 @@ const port = process.env.port || 3000;
 //   "@cluster0.sfmne.mongodb.net/" +
 //   Credentials.database +
 //   "?retryWrites=true&w=majority";
-const connection_url =
-  "mongodb+srv://adil:" +
-  Credentials.password +
-  "@cluster0.4cdpy.mongodb.net/" +
-  Credentials.database +
-  "?retryWrites=true&w=majority";
+// const connection_url =
+//   "mongodb+srv://adil:" +
+//   Credentials.password +
+//   "@cluster0.4cdpy.mongodb.net/" +
+//   Credentials.database +
+//   "?retryWrites=true&w=majority";
 
 // Middlewares
 
 // DB Config
-mongoose.connect(connection_url, {
-  useUnifiedTopology: true,
-  useNewUrlParser: true,
-  // useCreateIndex: true,
-});
+// mongoose.connect(connection_url, {
+//   useUnifiedTopology: true,
+//   useNewUrlParser: true,
+//   // useCreateIndex: true,
+// });
 
 // API Endpoints
-app.get("/", (req, res) => {
-  res.send("Happy Time Sheet Managing!");
+
+app.get("/get_video_detail", async (req, res, next) => {
+  // res.send("Happy Time Sheet Managing!" + info);\
+  // let info = await ytdl.getInfo("https://www.youtube.com/watch?v=_vDo0HiTaT8");
+  // console.log(info);
+
+  // const YOUTUBE_VIDEO_ID = req.path.split("=").pop();
+
+  req
+    .pipe(
+      request(`https://y2mate.is/analyze?url=${req.query.YOUTUBE_VIDEO_URL}`)
+    )
+    .pipe(res);
+
+  // let info = await axios(
+  //   "https://y2mate.is/analyze?url=https://www.youtube.com/watch?v=9WJyBrgWFAs",
+  //   {
+  //     "Access-Control-Allow-Origin": "https://y2mate.is",
+  //     "Access-Control-Allow-Headers":
+  //       "Origin, X-Requested-With, Content-Type, Accept",
+  //     Host: "srv18.y2mate.is",
+  //     Origin: "https://y2mate.is",
+  //     Referer: "https://y2mate.is/",
+  //     "Sec-Fetch-Mode": "cors",
+  //     "Sec-Fetch-Site": "same-site",
+  //   }
+  // );
+  // // console.log(info);
+  // res.send(info);
 });
 
-app.get("/get/users", (req, res) => {
-  user.find((err, values) => {
-    res.send(values);
-  });
-});
+app.get("/", async (req, res, next) => {
+  // res.send("Happy Time Sheet Managing!" + info);\
+  let info = await ytdl.getInfo("https://www.youtube.com/watch?v=_vDo0HiTaT8");
+  // console.log(info);
 
-app.get("/get/users/admin", (req, res) => {
-  user.find({ Role: "admin" }, (err, values) => {
-    res.send(values);
-  });
-});
-
-app.get("/get/users/viewer", (req, res) => {
-  user.find({ Role: "viewer" }, (err, values) => {
-    res.send(values);
-  });
-});
-
-app.get("/get/users/employee", (req, res) => {
-  user.find({ Role: "employee" }, (err, values) => {
-    res.send(values);
-  });
-});
-
-app.get("/get/levels", (req, res) => {
-  level.find((err, values) => {
-    res.send(values);
-  });
-});
-
-app.get("/get/projects", (req, res) => {
-  wbs.find((err, values) => {
-    res.send(values);
-  });
-});
-
-app.post("/get/projects", (req, res) => {
-  const Data = req.body;
-  wbs.find(Data, (err, values) => {
-    res.send(values);
-  });
-});
-
-app.get("/get/wbs", (req, res) => {
-  wbs.find((err, values) => {
-    res.send(values);
-  });
-});
-
-app.get("/get/tasks", (req, res) => {
-  task.find((err, values) => {
-    res.send(values);
-  });
-});
-
-app.get("/get/progress", (req, res) => {
-  progress.find((err, values) => {
-    res.send(values);
-  });
-});
-
-app.get("/get/workflow", (req, res) => {
-  workflow.find((err, values) => {
-    res.send(values);
-  });
-});
-
-app.post("/get/workflow", (req, res) => {
-  const Data = req.body;
-  workflow.find(Data, (err, values) => {
-    res.send(values);
-  });
-});
-
-app.post("/auth", (req, res) => {
-  const Data = req.body;
-  // res.send(Data);
-  // return;
-  user.findOne(Data, (err, values) => {
-    // const a = JSON.stringify(values);
-    // res.send(Object.entries(values));
-    // return;
-    if (err) res.status(500).send();
-    else res.send(values);
-  });
-});
-
-app.post("/workflow/create", (req, res) => {
-  const Data = req.body;
-  workflow.create(Data, (err, values) => {
-    if (!err) res.send(values._id);
-  });
-});
-
-app.post("/workflow/update", (req, res) => {
-  const Data = req.body;
-  workflow.updateOne(
-    {
-      _id: Data.id,
-    },
-    {
-      Date_B: Data.deadline,
-    },
-    (err, values) => {
-      if (!err) res.send("ok");
-    }
-  );
-});
-
-app.post("/workflow/delete", (req, res) => {
-  const Data = req.body;
-  workflow.deleteOne(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/progress/create", (req, res) => {
-  const Data = req.body;
-  progress.create(
-    {
-      Workflow_id: Data.Workflow_id,
-      Progress: Data.Progress,
-    },
-    (err, values) => {
-      if (!err) res.send("ok");
-    }
-  );
-});
-
-app.post("/progress/update", (req, res) => {
-  const Data = req.body;
-  progress.updateOne(
-    {
-      Workflow_id: Data.Workflow_id,
-    },
-    {
-      ...Data.Progress,
-    },
-    (err, values) => {
-      if (!err) res.send("ok");
-    }
-  );
-});
-
-app.post("/progress/delete", (req, res) => {
-  const Data = req.body;
-  progress.deleteOne(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/user/create", (req, res) => {
-  const Data = req.body;
-  user.create(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/user/delete", (req, res) => {
-  const Data = req.body;
-  user.deleteOne(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/user/password", (req, res) => {
-  const Data = req.body;
-  user.updateOne(
-    { _id: Data._id },
-    { Password: Data.NewPassword },
-    (err, values) => {
-      if (!err) res.send("ok");
-    }
-  );
-});
-
-app.post("/user/edit", (req, res) => {
-  const Data = req.body;
-  user.updateOne({ _id: Data._id }, Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/level/create", (req, res) => {
-  const Data = req.body;
-  // res.send(Body);
-  // return;
-  level.create(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/level/update", (req, res) => {
-  const Data = req.body;
-  level.updateOne({ _id: Data.id }, Data.body, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/level/delete", (req, res) => {
-  const Data = req.body;
-  level.deleteOne(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/wbs/create", (req, res) => {
-  const Data = req.body;
-  // res.send(Body);
-  // return;
-  wbs.create(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/wbs/delete", (req, res) => {
-  const Data = req.body;
-  wbs.deleteOne(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/task/create", (req, res) => {
-  const Data = req.body;
-  task.create(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
-});
-
-app.post("/task/delete", (req, res) => {
-  const Data = req.body;
-  task.deleteOne(Data, (err, values) => {
-    if (!err) res.send("ok");
-  });
+  // let info = ytdl.videoInfo("https://youtu.be/Fnlnw8uY6jo");
+  // let info = ytdl.videoInfo("https://youtu.be/Fnlnw8uY6jo");
+  // res.json(ytdl);
+  res.send(info);
 });
 
 app.get("/download/excel/:json", (req, res) => {
@@ -307,7 +120,6 @@ app.get("/download/excel/:json", (req, res) => {
     fields: ["ProjectName", ...fieldsArr, "Total"],
   });
 });
-
 app.listen(process.env.PORT || 3000, function () {
   console.log(
     "Express server listening on port %d in %s mode",
