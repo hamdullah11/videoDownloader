@@ -14,9 +14,11 @@ import ytdl from "ytdl-core";
 // import progress from "./schemas/progress.js";
 import request from "request";
 import axios from "axios";
+import fs from "fs";
 
 // App Config
 const app = express();
+
 // var json2xls = require('json2xls');
 
 // app.use(express.json());
@@ -86,16 +88,28 @@ app.get("/get_video_detail", async (req, res, next) => {
   // // console.log(info);
   // res.send(info);
 });
+app.get("/ownRequest", async (req, res, next) => {
+  req
+    .pipe(
+      request(
+        `https://videodownloaderapi12.herokuapp.com/get_video_detail?YOUTUBE_VIDEO_URL=${req.query.YOUTUBE_VIDEO_URL}`
+      )
+    )
+    .pipe(res);
+});
 
 app.get("/", async (req, res, next) => {
   // res.send("Happy Time Sheet Managing!" + info);\
-  let info = await ytdl.getInfo("https://www.youtube.com/watch?v=_vDo0HiTaT8");
+  // let info = await ytdl.getInfo("https://www.youtube.com/watch?v=_vDo0HiTaT8");
+  ytdl("https://www.youtube.com/watch?v=Dc7LAgqy1_E").pipe(
+    fs.createWriteStream(`videos/${Math.random()}.mp4`)
+  );
   // console.log(info);
 
   // let info = ytdl.videoInfo("https://youtu.be/Fnlnw8uY6jo");
   // let info = ytdl.videoInfo("https://youtu.be/Fnlnw8uY6jo");
   // res.json(ytdl);
-  res.send(info);
+  res.send("info");
 });
 
 app.get("/download/excel/:json", (req, res) => {
